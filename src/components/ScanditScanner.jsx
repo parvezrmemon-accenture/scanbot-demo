@@ -7,7 +7,7 @@ import { SCANDIT_API } from "../scanbotConfig";
 const SCAN_TYPE = {
   NONE: "NONE",
   AUTO_DETECT: "AUTO_DETECT",
-  MULTI: "MULTI", // NEW
+  MULTI: "MULTI",
 };
 
 const SCANDIT_API_STRING = SCANDIT_API;
@@ -34,10 +34,8 @@ const ScanditScanner = () => {
         view.connectToElement(document.getElementById("data-capture-view"));
         view.showProgressBar();
 
-        const apiKey = SCANDIT_API_STRING;
-
         await SDCCore.configure({
-          licenseKey: apiKey,
+          licenseKey: SCANDIT_API_STRING,
           libraryLocation:
             "https://cdn.jsdelivr.net/npm/scandit-web-datacapture-barcode@6.28.1/build/engine/",
           moduleLoaders: [SDCBarcode.barcodeCaptureLoader()],
@@ -52,7 +50,8 @@ const ScanditScanner = () => {
         camera = SDCCore.Camera.default;
         cameraRef.current = camera;
 
-        const cameraSettings = SDCBarcode.BarcodeTracking.recommendedCameraSettings;
+        const cameraSettings =
+          SDCBarcode.BarcodeTracking.recommendedCameraSettings;
         await camera.applySettings(cameraSettings);
         await context.setFrameSource(camera);
 
@@ -78,13 +77,15 @@ const ScanditScanner = () => {
 
         barcodeTracking.addListener({
           didUpdateSession: (_, session) => {
-            if (scanType !== SCAN_TYPE.AUTO_DETECT && scanType !== SCAN_TYPE.MULTI)
+            if (
+              scanType !== SCAN_TYPE.AUTO_DETECT &&
+              scanType !== SCAN_TYPE.MULTI
+            )
               return;
 
             const detected = session.addedTrackedBarcodes.map(
               (b) => b.barcode.data
             );
-
             if (detected.length === 0) return;
 
             setScanResults((prev) => [...new Set([...prev, ...detected])]);
@@ -107,7 +108,7 @@ const ScanditScanner = () => {
     };
   }, [scanType]);
 
-  // 🔦 Toggle Torch
+  // 🔦 Torch
   const toggleTorch = async () => {
     if (!cameraRef.current) return;
     const desired = torchOn
@@ -120,6 +121,7 @@ const ScanditScanner = () => {
 
   return (
     <>
+      {/* Scanner View */}
       <div
         id="data-capture-view"
         style={{
@@ -129,7 +131,31 @@ const ScanditScanner = () => {
         }}
       />
 
-      {/* Bottom UI Overlay */}
+      {/* ❌ Close Button */}
+      <button
+        onClick={() => {
+          contextRef.current?.dispose();
+          window.location.reload();
+        }}
+        style={{
+          position: "absolute",
+          top: "20px",
+          left: "20px",
+          zIndex: 9999,
+          background: "rgba(0,0,0,0.6)",
+          color: "white",
+          borderRadius: "50%",
+          width: "45px",
+          height: "45px",
+          border: "none",
+          fontSize: "20px",
+          pointerEvents: "auto",
+        }}
+      >
+        ✕
+      </button>
+
+      {/* 🔘 Auto + Multi Buttons */}
       <div
         style={{
           position: "absolute",
@@ -137,35 +163,50 @@ const ScanditScanner = () => {
           width: "100%",
           display: "flex",
           justifyContent: "center",
-          alignItems: "center",
+          gap: "14px",
           pointerEvents: "none",
         }}
       >
-        {/* Auto / Multi Toggle */}
+        {/* AUTO BUTTON */}
         <button
-          onClick={() =>
-            setScanType((prev) =>
-              prev === SCAN_TYPE.AUTO_DETECT
-                ? SCAN_TYPE.MULTI
-                : SCAN_TYPE.AUTO_DETECT
-            )
-          }
+          onClick={() => setScanType(SCAN_TYPE.AUTO_DETECT)}
           style={{
             pointerEvents: "auto",
-            background: "white",
-            padding: "18px 28px",
-            borderRadius: "50px",
-            fontSize: "18px",
-            fontWeight: "600",
+            padding: "14px 24px",
+            borderRadius: "25px",
             border: "none",
-            boxShadow: "0px 0px 10px rgba(0,0,0,0.3)",
+            fontSize: "16px",
+            fontWeight: "600",
+            background:
+              scanType === SCAN_TYPE.AUTO_DETECT ? "#00b4ff" : "#333",
+            color: "white",
+            boxShadow: "0px 0px 6px rgba(0,0,0,0.3)",
           }}
         >
-          {scanType === SCAN_TYPE.AUTO_DETECT ? "Auto" : "Multi"}
+          Auto
+        </button>
+
+        {/* MULTI BUTTON */}
+        <button
+          onClick={() => setScanType(SCAN_TYPE.MULTI)}
+          style={{
+            pointerEvents: "auto",
+            padding: "14px 24px",
+            borderRadius: "25px",
+            border: "none",
+            fontSize: "16px",
+            fontWeight: "600",
+            background:
+              scanType === SCAN_TYPE.MULTI ? "#00b4ff" : "#333",
+            color: "white",
+            boxShadow: "0px 0px 6px rgba(0,0,0,0.3)",
+          }}
+        >
+          Multi
         </button>
       </div>
 
-      {/* Torch Icon (bottom-right) */}
+      {/* 🔦 Torch Icon */}
       <button
         onClick={toggleTorch}
         style={{
@@ -177,8 +218,9 @@ const ScanditScanner = () => {
           width: "55px",
           height: "55px",
           border: "none",
-          fontSize: "20px",
+          fontSize: "22px",
           boxShadow: "0px 0px 10px rgba(0,0,0,0.3)",
+          pointerEvents: "auto",
         }}
       >
         🔦
