@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import CustomScanner from "./components/CustomScanner";
+import ScanditScanner from "./components/ScanditScanner";
 
 export default function App() {
   const [open, setOpen] = useState(false);
@@ -15,7 +16,7 @@ export default function App() {
       )}
 
       {open && (
-        <CustomScanner
+        <ScanditScanner
           onClose={(result) => {
             if (result) setScannedResult(result);
             setOpen(false);
