@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as ScanbotSDK from "scanbot-web-sdk";
-import { scanbotConfig } from "../scanbotConfig";
+import { LICENSE_KEY, scanbotConfig } from "../scanbotConfig";
 
 export default function CustomScanner({ onClose }) {
   const containerRef = useRef(null);
@@ -10,7 +10,7 @@ export default function CustomScanner({ onClose }) {
   useEffect(() => {
     async function initScanner() {
       const sdk = await ScanbotSDK.initialize({
-        licenseKey: "your-key",
+        licenseKey: LICENSE_KEY,
         // enginePath: process.env.PUBLIC_URL + "/scanbot-sdk",
         enginePath: process.env.PUBLIC_URL + "/wasm",
         // enginePath: "/wasm/",
