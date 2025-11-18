@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/scanbot-demo/static/css/main.e6c13ad2.css",
-    "main.js": "/scanbot-demo/static/js/main.76a2778d.js",
+    "main.js": "/scanbot-demo/static/js/main.a0a596b3.js",
     "static/js/453.8371254b.chunk.js": "/scanbot-demo/static/js/453.8371254b.chunk.js",
     "index.html": "/scanbot-demo/index.html",
     "main.e6c13ad2.css.map": "/scanbot-demo/static/css/main.e6c13ad2.css.map",
-    "main.76a2778d.js.map": "/scanbot-demo/static/js/main.76a2778d.js.map",
+    "main.a0a596b3.js.map": "/scanbot-demo/static/js/main.a0a596b3.js.map",
     "453.8371254b.chunk.js.map": "/scanbot-demo/static/js/453.8371254b.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.e6c13ad2.css",
-    "static/js/main.76a2778d.js"
+    "static/js/main.a0a596b3.js"
   ]
 }
