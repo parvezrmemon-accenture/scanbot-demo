@@ -2,7 +2,14 @@ import React, { useEffect, useRef, useState } from "react";
 import * as SDCCore from "scandit-web-datacapture-core";
 import * as SDCBarcode from "scandit-web-datacapture-barcode";
 
-import { Paper, List, ListItem, ListItemText, Button, Typography } from "@mui/material";
+import {
+  Paper,
+  List,
+  ListItem,
+  ListItemText,
+  Button,
+  Typography,
+} from "@mui/material";
 import { SCANDIT_API } from "../scanbotConfig";
 
 const SCAN_TYPE = {
@@ -47,7 +54,9 @@ const ScanditScanner = () => {
 
         camera = SDCCore.Camera.default;
         cameraRef.current = camera;
-        await camera.applySettings(SDCBarcode.BarcodeTracking.recommendedCameraSettings);
+        await camera.applySettings(
+          SDCBarcode.BarcodeTracking.recommendedCameraSettings
+        );
         await context.setFrameSource(camera);
 
         // Enable tracking
@@ -60,17 +69,22 @@ const ScanditScanner = () => {
           SDCBarcode.Symbology.UPCE,
           SDCBarcode.Symbology.EAN13UPCA,
         ]);
-        settings.settingsForSymbology(SDCBarcode.Symbology.Code39).activeSymbolCounts =
-          Array.from({ length: 14 }, (_, i) => i + 7);
+        settings.settingsForSymbology(
+          SDCBarcode.Symbology.Code39
+        ).activeSymbolCounts = Array.from({ length: 14 }, (_, i) => i + 7);
 
-        barcodeTracking = await SDCBarcode.BarcodeTracking.forContext(context, settings);
+        barcodeTracking = await SDCBarcode.BarcodeTracking.forContext(
+          context,
+          settings
+        );
         await barcodeTracking.setEnabled(true);
 
         // Green overlay for all
-        const overlay = SDCBarcode.BarcodeTrackingBasicOverlay.withBarcodeTrackingForView(
-          barcodeTracking,
-          view
-        );
+        const overlay =
+          SDCBarcode.BarcodeTrackingBasicOverlay.withBarcodeTrackingForView(
+            barcodeTracking,
+            view
+          );
         overlay.listener = {
           brushForTrackedBarcode: () =>
             new SDCCore.Brush(
@@ -82,8 +96,13 @@ const ScanditScanner = () => {
 
         barcodeTracking.addListener({
           didUpdateSession: (_, session) => {
-            if (scanType === SCAN_TYPE.AUTO_DETECT || scanType === SCAN_TYPE.MULTI) {
-              const detected = session.addedTrackedBarcodes.map((b) => b.barcode.data);
+            if (
+              scanType === SCAN_TYPE.AUTO_DETECT ||
+              scanType === SCAN_TYPE.MULTI
+            ) {
+              const detected = session.addedTrackedBarcodes.map(
+                (b) => b.barcode.data
+              );
               if (detected.length === 0) return;
               setScanResults((prev) => [...new Set([...prev, ...detected])]);
             }
@@ -225,7 +244,9 @@ const ScanditScanner = () => {
           variant="contained"
           onClick={() =>
             setScanType((prev) =>
-              prev === SCAN_TYPE.AUTO_DETECT ? SCAN_TYPE.MULTI : SCAN_TYPE.AUTO_DETECT
+              prev === SCAN_TYPE.AUTO_DETECT
+                ? SCAN_TYPE.MULTI
+                : SCAN_TYPE.AUTO_DETECT
             )
           }
           sx={{
